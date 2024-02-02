@@ -89,23 +89,23 @@ services:
 Now this is a handful.  These contents go into docker-compose.yml, in our todo-app-docker directory. Familliarize yourself with yaml if you haven’t already, it’s basically json-lite. We define two services: mariadb, which will run our database, and app, which will run the nodejs app. 
 Here are the various fields: 
 
-image: Pulls from a public repository of images, in our case: mariadb and node:20-alpine, which is the minimal alpine linux (often used in docker distributions, cause it comes with nothing else), and node installed.
+**image**: Pulls from a public repository of images, in our case: mariadb and node:20-alpine, which is the minimal alpine linux (often used in docker distributions, cause it comes with nothing else), and node installed.
 
-container_name: This is what the container is called, as if it was its own computer on the network. You can substitute the name you specify here for the host in the connection field of other programs. 
+**container_name**: This is what the container is called, as if it was its own computer on the network. You can substitute the name you specify here for the host in the connection field of other programs. 
 
-restart: Determines the behavior of the service specified. Do you want it to restart if it shuts down, or only if it encounters an error, or always? I ran into some connection timeout issues with the connection pool, so I set both to restart: always, which should fix that problem, even if it’s a little hacky.
+**restart**: Determines the behavior of the service specified. Do you want it to restart if it shuts down, or only if it encounters an error, or always? I ran into some connection timeout issues with the connection pool, so I set both to restart: always, which should fix that problem, even if it’s a little hacky.
 
-volumes: An array of mappings from outside folders to inside folders. Remember, the inside (of the container) is what’s in the todo-app-docker folder. The outside is the docker-environment, which you don’t have to worry about, you just give it a file or folder path for sharing data between programs, if you need to do that through file systems instead of http apis. 
+**volumes**: An array of mappings from outside folders to inside folders. Remember, the inside (of the container) is what’s in the todo-app-docker folder. The outside is the docker-environment, which you don’t have to worry about, you just give it a file or folder path for sharing data between programs, if you need to do that through file systems instead of http apis. 
 
-ports: A mapping from outside port to inside port. We want mariadb to expose port 3306 on the network “db” where app can listen to it on host mariadb, port 3306. 
+**ports**: A mapping from outside port to inside port. We want mariadb to expose port 3306 on the network “db” where app can listen to it on host mariadb, port 3306. 
 
-networks: A list of networks. You can have multiple networks to have your programs talking to each other in ways that you intend, possibly separate from each other, and for different purposes. Note the networks field at the top. It defines the “db” network that’s used in the services “mariadb” and “app”. 
+**networks**: A list of networks. You can have multiple networks to have your programs talking to each other in ways that you intend, possibly separate from each other, and for different purposes. Note the networks field at the top. It defines the “db” network that’s used in the services “mariadb” and “app”. 
 
-environment: Docker packages are often controlled via environment variables. Be sure not to commit your passwords to version control, if you’re using it, using the .gitignore file. 
+**environment**: Docker packages are often controlled via environment variables. Be sure not to commit your passwords to version control, if you’re using it, using the .gitignore file. 
 
-depends_on: With this, you can instruct docker to start and wait for containers in a certain order. For example if starting the app without the database running would create an error.
+**depends_on**: With this, you can instruct docker to start and wait for containers in a certain order. For example if starting the app without the database running would create an error.
 
-command: We basically downloaded a nodejs container, and now we give it a command: npm install && cd /app && node todo-server.js
+**command**: We basically downloaded a nodejs container, and now we give it a command: npm install && cd /app && node todo-server.js
 
 A note on the volumes section in the mariadb service: the initDB line maps the outside directory initDB to the inside directory /docker-entrypoint-initdb.d, which this docker container then uses to find scripts that initialize the database on first run. If you run “docker-compose down”, (or hit CTRL-C) it will shut down the containers. If you run “docker-compose down -v”, it also gets rid of the volumes we created, meaning upon next start of these containers, all the data volumes have to be recreated. Like a reset.
 
