@@ -1,0 +1,36 @@
+/*
+  File: static/index.css
+  Purpose: A rough sketch style for Todo App
+  By: mooreolith@gmail.com
+  Date: 2024-01-29
+*/
+
+html, body {
+  margin: 0;
+  border: 0;
+  padding: 0;
+}
+
+.app {
+  padding-left: 20px;
+}
+
+#error {
+  color: red;
+}
+
+li {
+  list-style: none;
+}
+
+.done {
+  text-decoration: line-through;
+}
+
+.indicator::after {
+  content: '  ';
+}
+
+.todo::after {
+  content: '  ';
+}

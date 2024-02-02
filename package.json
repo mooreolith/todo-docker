@@ -1,0 +1,20 @@
+{
+  "name": "todo-app",
+  "version": "1.0.0",
+  "description": "A dead simple todo app for reference",
+  "main": "todo-server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node todo-server.js"
+  },
+  "keywords": [
+    "todo",
+    "reference"
+  ],
+  "author": "Josh Moore <mooreolith@gmail.com>",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2",
+    "mariadb": "^3.2.3"
+  }
+}

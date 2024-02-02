@@ -1,0 +1,42 @@
+version: '3'
+volumes:
+  data:
+networks:
+  db:
+services: 
+  mariadb:
+    image: mariadb
+    container_name: mariadb
+    restart: always
+    volumes:
+      - ./initDB:/docker-entrypoint-initdb.d
+      - data:/var/lib/mysql:rw
+    ports:
+      - "3306:3306"
+    networks:
+      - db
+    environment:
+      - MYSQL_HOST=mariadb
+      - MYSQL_ROOT_USER=root
+      - MYSQL_ALLOW_EMPTY_ROOT_PASSWORD=1
+      - MYSQL_ROOT_PASSWORD=''
+      - MYSQL_USER=todo_user
+      - MYSQL_PASSWORD=todo_pass
+      - MYSQL_DATABASE=todo_db
+  app:
+    image: node:20-alpine
+    container_name: todo-app
+    restart: always
+    command: sh -c "npm install && cd /app && node todo-server.js"
+    ports: 
+      - 127.0.0.1:3000:3000
+    working_dir: /app
+    links:
+      - mariadb
+    volumes:
+      - ./:/app
+      - /app/node_modules
+    networks:
+      - db
+    depends_on:
+      - mariadb
